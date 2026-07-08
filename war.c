@@ -19,6 +19,14 @@ typedef struct
 
 } Territorio; //
 
+char *missoes[5] = {
+    "Conquistar 3 territorios seguidos",
+    "Eliminar todas as tropas da cor vermelha",
+    "Conquistar todos os territorios",
+    "Ter pelo menos 10 tropas em um territorio",
+    "Dominar 2 territorios de cores diferentes"
+};
+
 
 // ================= LIMPAR BUFFER ================
 
@@ -49,6 +57,36 @@ void exibirTerritorios(
 
         printf("Tropas: %d\n", mapa[i].tropas);
     }
+}
+// ====== ATRIBUIÇÃO DE MISSÕES ===========
+
+void atribuirMissao(char* destino, char* missoes[], int totalMissoes)
+{
+    int indiceSorteado;
+    indiceSorteado= rand() %totalMissoes;
+
+    strcpy(destino, missoes[indiceSorteado]);
+
+}
+
+void exibirMissao (char* missao)
+{
+    printf("missao: %s \n", missao );
+}
+
+int verificarMissao (char* missao, Territorio* mapa, int tamanho) 
+{
+    for (int i= 0; i < tamanho; i++)
+{
+    if (strcmp(mapa[i].cor, mapa[0].cor) != 0)
+    {
+       return 0; 
+    }
+   
+}
+
+
+return 1;
 }
 
 
@@ -106,9 +144,10 @@ void atacar(
 
 // ================= LIBERAR MEMÓRIA =================
 
-void liberarMemoria(Territorio *mapa)
+void liberarMemoria(Territorio *mapa, char *missaoJogador)
 {
     free(mapa);
+    free(missaoJogador);
 
     printf(
         "\nMemoria liberada com sucesso.\n"
@@ -149,6 +188,13 @@ int main()
 
         return 1;
     }
+
+//====== MISSAO JOGADOR ================
+
+char *missaoJogador = (char*) malloc (100 * sizeof (char));
+
+atribuirMissao (missaoJogador, missoes, 5);
+exibirMissao(missaoJogador);
 
 
     // ================= CADASTRO =================
@@ -227,6 +273,13 @@ int main()
 
             // exibe atualização
             exibirTerritorios(mapa,totalterritorios);
+
+
+        if (verificarMissao (missaoJogador,mapa, totalterritorios))
+        {
+            printf("Missao cumprida! voce venceu");
+        }
+
         }
     }
 
@@ -237,9 +290,7 @@ int main()
 
 
     // libera memória
-    liberarMemoria(mapa);
-
+    liberarMemoria(mapa, missaoJogador);
     return 0;
 }
 
-// tentar fzr usando o switch
